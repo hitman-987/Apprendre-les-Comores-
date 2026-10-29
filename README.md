@@ -24,7 +24,7 @@ Ouvrez `index.html` dans un navigateur. Aucune installation n'est nécessaire.
 
 ## La carte
 
-Carte Leaflet avec fonds libres : plan (CARTO / OpenStreetMap), satellite (Esri) et relief (OpenTopoMap).
+Carte Leaflet avec fonds libres : plan (OpenStreetMap, avec un plan Esri de secours), satellite avec routes et noms de lieux (Esri) et relief (OpenTopoMap).
 Les repères placent les ressources sur les lieux qu'elles citent ; les lieux se règlent dans `data/places.js`.
 
 ## L'assistant

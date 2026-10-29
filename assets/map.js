@@ -10,26 +10,39 @@ const PLACED = new Set(PLACES.flatMap((p) => p.resources));
 
 let map, markerLayer, lastIle = null;
 
+const ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services/";
+const OSM_ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+
 function baseLayers() {
-  const carto = L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
-    maxZoom: 19, subdomains: "abcd",
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+  // Plan : la carte OpenStreetMap, la plus détaillée pour les villages comoriens.
+  const plan = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: OSM_ATTR });
+  // Plan de secours si OpenStreetMap ne répond pas.
+  const planEsri = L.tileLayer(ESRI + "World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
+    maxZoom: 19, attribution: "&copy; Esri, HERE, Garmin, OpenStreetMap",
   });
-  const osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-  });
+  // Satellite, avec par-dessus les routes et les noms de lieux.
   const satellite = L.layerGroup([
-    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
-      maxZoom: 19, attribution: "Images &copy; Esri, Maxar, Earthstar Geographics",
-    }),
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png", {
-      maxZoom: 19, subdomains: "abcd", attribution: "&copy; CARTO",
-    }),
+    L.tileLayer(ESRI + "World_Imagery/MapServer/tile/{z}/{y}/{x}", { maxZoom: 19, attribution: "Images &copy; Esri, Maxar, Earthstar Geographics" }),
+    L.tileLayer(ESRI + "Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}", { maxZoom: 19 }),
+    L.tileLayer(ESRI + "Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}", { maxZoom: 19 }),
   ]);
   const relief = L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
-    maxZoom: 17, attribution: '&copy; <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)',
+    maxZoom: 17, attribution: '&copy; <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA), ' + OSM_ATTR,
   });
-  return { "Plan": carto, "Satellite": satellite, "Relief": relief, "OpenStreetMap": osm };
+  return { "Plan": plan, "Plan (Esri)": planEsri, "Satellite": satellite, "Relief": relief };
+}
+
+// Si le plan OpenStreetMap ne se charge pas, on passe sur le plan Esri.
+function watchPlan(layers) {
+  let loaded = 0, failed = 0;
+  layers["Plan"].on("tileload", () => loaded++);
+  layers["Plan"].on("tileerror", () => {
+    failed++;
+    if (failed >= 4 && loaded === 0 && map.hasLayer(layers["Plan"])) {
+      map.removeLayer(layers["Plan"]);
+      layers["Plan (Esri)"].addTo(map);
+    }
+  });
 }
 
 function markerIcon(color, count, big) {
@@ -119,6 +132,7 @@ function setupMap() {
   const layers = baseLayers();
   map = L.map("map", { zoomControl: true, scrollWheelZoom: false, worldCopyJump: false, minZoom: 7 });
   layers["Plan"].addTo(map);
+  watchPlan(layers);
   L.control.layers(layers, null, { position: "topright" }).addTo(map);
   L.control.scale({ imperial: false }).addTo(map);
   new FullscreenControl().addTo(map);
@@ -129,12 +143,16 @@ function setupMap() {
   map.on("click focus", () => map.scrollWheelZoom.enable());
   map.on("mouseout", () => map.scrollWheelZoom.disable());
 
-  let warned = false;
-  map.on("tileerror", () => {
-    if (warned) return;
-    warned = true;
-    $("mapMsg").textContent = "Le fond de carte ne se charge pas ici. Les repères restent utilisables ; essayez un autre fond avec le bouton en haut à droite.";
-    $("mapMsg").hidden = false;
+  // Prévenir seulement si aucun fond ne se charge (par exemple sans connexion).
+  let anyTile = false, errors = 0;
+  map.on("layeradd", (e) => {
+    if (!e.layer.on || !e.layer.getTileUrl) return;
+    e.layer.on("tileload", () => { anyTile = true; $("mapMsg").hidden = true; });
+    e.layer.on("tileerror", () => {
+      if (anyTile || ++errors < 12) return;
+      $("mapMsg").textContent = "Le fond de carte ne se charge pas. Les repères restent utilisables ; essayez un autre fond avec le bouton en haut à droite.";
+      $("mapMsg").hidden = false;
+    });
   });
 
   markerLayer = L.layerGroup().addTo(map);
@@ -147,3 +165,18 @@ onRender.push(({ list }) => {
   drawMarkers(list);
   fitIsland(state.ile);
 });
+
+// Un lieu trouvé par l'assistant (localité, recherche OpenStreetMap ou Wikidata) : repère temporaire.
+let foundMarker = null;
+function showOnMap(lat, lon, name, sub) {
+  if (!map) return;
+  if (foundMarker) foundMarker.remove();
+  foundMarker = L.marker([lat, lon], {
+    icon: L.divIcon({ className: "pin-wrap", html: '<span class="pin pin-found">★</span>', iconSize: [34, 34], iconAnchor: [17, 17], popupAnchor: [0, -17] }),
+    title: name, alt: name, zIndexOffset: 1000,
+  }).addTo(map).bindPopup(`<div class="popup"><p class="popup-sub">${esc(sub)}</p><h3>${esc(name)}</h3>
+    <p class="popup-note"><a href="https://www.google.com/maps/search/?api=1&query=${lat},${lon}" target="_blank" rel="noopener">Ouvrir dans Google Maps</a></p></div>`);
+  $("carte").scrollIntoView({ behavior: "smooth" });
+  map.flyTo([lat, lon], 14, { duration: 1 });
+  setTimeout(() => foundMarker && foundMarker.openPopup(), 1100);
+}

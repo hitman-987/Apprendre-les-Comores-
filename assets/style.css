@@ -107,6 +107,7 @@ body.map-open { overflow: hidden; }
   border: 2.5px solid #fff; box-shadow: 0 2px 8px rgb(0 0 0 / .35);
 }
 .pin-island { border-style: dashed; font-size: .95rem; }
+.pin-found { background: #17201f; color: #ffd84d; font-size: 1rem; }
 .pin[style*="#2a5db0"], .pin[style*="#d2232a"] { color: #fff; }
 .pin[style*="#ffffff"] { border-color: #10201e; }
 .leaflet-popup-content { margin: 14px 16px; }
@@ -345,3 +346,9 @@ footer p { margin: 4px 0; }
   border: 0; border-radius: 999px; padding: 5px 12px; cursor: pointer;
 }
 .active-ile[hidden] { display: none; }
+
+.place-found { margin-top: 14px; padding: 14px 16px; border-radius: 12px; background: var(--lagoon-soft); }
+.place-found h4 { font: 700 1.1rem var(--font-display); margin: 2px 0 2px; }
+.place-found p { margin: 4px 0 0 !important; }
+.web-links { font-size: .88rem; margin-top: 8px !important; }
+.map-btn { font-size: .88rem; font-weight: 600; }

@@ -27,7 +27,9 @@ const CATEGORIES = {
   etudes: "Études et recherches",
   innovations: "Avancées récentes",
   medias: "Presse et podcasts",
-  bibliotheques: "Bibliothèques en ligne",
+  manuels: "Manuels et livres gratuits",
+  donnees: "Données et cartes",
+  bibliotheques: "Bibliothèques et archives",
 };
 
 const ILES = {
@@ -734,3 +736,120 @@ R("innovations", "archipel", "Un an après l'entrée des Comores à l'OMC", "For
 R("innovations", "ngazidja", "Salon des entreprises BIK 2025", "AllAfrica",
   "« Investir aujourd'hui, transformer demain » : le salon des entreprises de Moroni.",
   "https://fr.allafrica.com/stories/202508270155.html");
+
+/* ───────────── Manuels et livres gratuits ───────────── */
+R("manuels", "archipel", "Essai sur les Comores", "Alfred Gevrey, 1870, texte intégral sur Wikisource",
+  "Le grand livre ancien sur l'archipel : géographie, histoire des sultanats, société, à lire en ligne gratuitement.",
+  "https://fr.wikisource.org/wiki/Essai_sur_les_Comores/2", { top: true });
+R("manuels", "archipel", "Essai sur les îles Comores (version numérisée)", "Alfred Gevrey, 1870, Gallica (BnF)",
+  "Le fac-similé de l'édition originale, page par page.",
+  "https://gallica.bnf.fr/ark:/12148/bpt6k62208586/f116.image");
+R("manuels", "archipel", "Archipel des Comores : étude géographique", "R. de Maximy, 1968, IRD, accès libre",
+  "Une étude géographique complète des quatre îles : relief, climat, population, agriculture.",
+  "https://www.documentation.ird.fr/hor/fdi:010029858");
+R("manuels", "archipel", "Aperçu géographique de l'archipel des Comores", "IRD, PDF",
+  "Une présentation géographique de l'archipel, utile comme base de cours.",
+  "https://horizon.documentation.ird.fr/exl-doc/pleins_textes/divers14-07/21671.pdf");
+R("manuels", "ndzuwani", "L'islam aux Comores : histoire culturelle d'Anjouan", "Claude Robineau, 1966, IRD",
+  "Étude classique sur l'islam, les confréries et la société anjouanaise.",
+  "https://www.documentation.ird.fr/hor/fdi:05057");
+R("manuels", "archipel", "Ichthyologie et pêche aux Comores", "IRD, 1954",
+  "Les poissons et la pêche traditionnelle dans l'archipel.",
+  "https://www.documentation.ird.fr/hor/fdi:12917");
+R("manuels", "archipel", "Plus de 200 livres de l'IRD en accès libre", "IRD Éditions",
+  "Géographie, océan Indien, Madagascar, biodiversité : des livres scientifiques complets à télécharger.",
+  "https://www.ird.fr/plus-de-200-ebook-de-ird-editions-en-acces-libre");
+R("manuels", "archipel", "Sujets du bac d'histoire-géographie des Comores", "Daria, 2011 à 2018, PDF",
+  "Les sujets des années précédentes pour réviser le programme comorien.",
+  "https://daria-bac-histoire-geographie.webador.fr/");
+R("manuels", "archipel", "Une géographie des Comores (manuel scolaire)", "Note sur le manuel de G. Boissinot, Persée",
+  "Présentation du manuel de géographie publié pour les écoles comoriennes en 1989.",
+  "https://www.persee.fr/doc/caoum_0373-5834_1991_num_44_174_3394");
+R("manuels", "archipel", "Les Comores sur Vikidia", "L'encyclopédie des 8-13 ans",
+  "Une présentation simple du pays pour les plus jeunes.",
+  "https://fr.vikidia.org/wiki/Comores_(pays)");
+R("manuels", "archipel", "Dictionnaires de comorien en ligne", "Lexilogos",
+  "Dictionnaires shingazidja et shimaore en ligne, gratuits.",
+  "https://www.lexilogos.com/comorien_dictionnaire.htm");
+R("manuels", "archipel", "Qu'est-ce que le comorien (shiKomori) ?", "ORELC, leçon gratuite",
+  "Première leçon : origines, variantes et écriture de la langue.",
+  "https://orelc.ac/academy/FrenchLessons/viewLesson/2");
+R("manuels", "archipel", "Atlas des reptiles et amphibiens des Comores", "Muséum national d'Histoire naturelle, 2019",
+  "Inventaire illustré des reptiles et amphibiens de l'archipel.",
+  "https://sciencepress.mnhn.fr/en/collections/inventaires-biodiversite/atlas-des-reptiles-et-amphibiens-terrestres-de-l-archipel-des-comores");
+
+/* ───────────── Données et cartes ───────────── */
+R("donnees", "archipel", "INSEED : statistiques officielles", "Institut national de la statistique",
+  "Recensements, enquêtes, séries sur l'inflation, la croissance, la population et la santé.",
+  "https://www.inseed-comores.org/", { top: true });
+R("donnees", "archipel", "Publications de l'INSEED", "Base de données des publications",
+  "Rapports d'enquêtes et séries statistiques à télécharger.",
+  "https://inseed-comores.org/publications");
+R("donnees", "archipel", "Archive nationale des microdonnées (NADA)", "INSEED",
+  "Les données détaillées des recensements (population 2017, agriculture 2004 et 2025).",
+  "https://www.nada.inseed-comores.org/index.php/home");
+R("donnees", "archipel", "Recensement général de l'agriculture 2025", "INSEED, NADA",
+  "73 818 exploitations agricoles recensées dans les trois îles.",
+  "https://www.nada.inseed-comores.org/index.php/catalog/16");
+R("donnees", "archipel", "Données humanitaires sur les Comores", "Humanitarian Data Exchange (ONU)",
+  "Limites administratives, localités, routes, bâtiments, santé : des dizaines de jeux de données ouverts.",
+  "https://data.humdata.org/group/com");
+R("donnees", "archipel", "Limites administratives et liste des localités", "HDX, OCHA",
+  "Îles, préfectures, communes et villages avec leurs codes, au format tableur.",
+  "https://data.humdata.org/dataset/comoros-administrative-level-0-3-boundaries");
+R("donnees", "archipel", "Points d'intérêt OpenStreetMap", "HDX, Humanitarian OpenStreetMap Team",
+  "Écoles, centres de santé, mosquées, commerces… tous les lieux cartographiés dans OpenStreetMap.",
+  "https://data.humdata.org/dataset/hotosm_com_points_of_interest");
+R("donnees", "archipel", "Divisions administratives des Comores", "GitHub, licence CC BY 4.0",
+  "3 îles, 17 préfectures et 55 communes avec leurs coordonnées (JSON, CSV).",
+  "https://github.com/open-admin-data/comoros-administrative-divisions");
+R("donnees", "archipel", "OpenStreetMap aux Comores", "Wiki OpenStreetMap",
+  "Comment la carte libre des Comores est construite, et comment y contribuer.",
+  "https://wiki.openstreetmap.org/wiki/FR:Comoros");
+R("donnees", "archipel", "Villes et population des Comores", "City Population",
+  "Population des villes et villages à chaque recensement.",
+  "https://www.citypopulation.de/en/comoros/cities");
+R("donnees", "archipel", "Banque mondiale : indicateurs des Comores", "World Bank Open Data",
+  "Population, économie, éducation, santé, environnement : les séries depuis 1960.",
+  "https://data.worldbank.org/country/comoros", { lang: "en" });
+R("donnees", "archipel", "Banque centrale des Comores : publications", "Rapports annuels et bulletins",
+  "Statistiques monétaires, balance des paiements et rapports annuels.",
+  "https://banque-comores.km/uploads/DOCUMENTS/Rapport_annuel_2019.pdf");
+R("donnees", "archipel", "Biodiversité des Comores : rapport GBIF", "GBIF, 2025, PDF",
+  "Les observations d'espèces disponibles en accès libre pour l'archipel.",
+  "https://analytics-files.gbif.org/country/KM/GBIF_CountryReport_KM.pdf", { lang: "en" });
+R("donnees", "archipel", "Centre d'échange sur la biodiversité des Comores", "Convention sur la diversité biologique",
+  "Stratégie nationale, rapports et indicateurs sur la biodiversité.",
+  "https://km.chm-cbd.net/en/general-information", { lang: "en" });
+R("donnees", "archipel", "Aires marines protégées des Comores", "Convention de Nairobi, tableau de bord",
+  "Les aires marines protégées et leurs données.",
+  "https://nairobiconvention.org/clearinghouse/node/429", { lang: "en" });
+R("donnees", "archipel", "Profil environnemental des Comores", "UICN, 2020, PDF",
+  "Aires protégées, zones importantes pour les oiseaux, espèces menacées.",
+  "https://old.biopama.org/sites/default/files/2020-12/IUCN2020%20ESA%20SoPACA%20Country%20Profile%20-%20Comoros.pdf", { lang: "en" });
+R("donnees", "archipel", "Profil de l'eau aux Comores", "FAO Aquastat, PDF",
+  "Ressources en eau, climat et agriculture.",
+  "https://www.fao.org/fileadmin/user_upload/aquastat/pdf_files/COM_comores_cp.pdf");
+R("donnees", "archipel", "Indice de performance environnementale", "Université Yale",
+  "Le classement environnemental des Comores, indicateur par indicateur.",
+  "https://epi.yale.edu/epi-results/2022/country/com", { lang: "en" });
+R("donnees", "archipel", "Les Comores en un coup d'œil", "Wikipédia (anglais)",
+  "Le plan détaillé de tous les articles sur le pays : géographie, histoire, culture, économie.",
+  "https://en.wikipedia.org/wiki/Outline_of_the_Comoros", { lang: "en" });
+R("donnees", "archipel", "Photos libres des Comores", "Wikimedia Commons",
+  "Des milliers de photos et cartes libres de droits, classées par lieu.",
+  "https://commons.wikimedia.org/wiki/Category:Cities_in_the_Comoros");
+
+/* ───────────── Bibliothèques et archives (ajouts) ───────────── */
+R("bibliotheques", "archipel", "Archives nationales d'outre-mer : instruments de recherche", "IREL, ANOM",
+  "Les inventaires des archives coloniales, dont celles des Comores et de Madagascar.",
+  "https://www.culture.gouv.fr/fr/espace-documentation/bases-de-donnees/Fiches-bases-de-donnees/irel-les-instruments-de-recherche-en-ligne");
+R("bibliotheques", "maore", "Catalogue du centre universitaire de Mayotte", "Bibliothèque universitaire",
+  "Le catalogue des livres sur Mayotte et les Comores disponibles à Dembeni.",
+  "https://cdu.univ-mayotte.fr/opac_css/index.php?lvl=notice_display&id=35947");
+R("bibliotheques", "archipel", "Horizon : documents de l'IRD", "Plus de 70 000 documents en accès libre",
+  "Le fonds de l'Institut de recherche pour le développement, avec de nombreuses études sur les Comores.",
+  "https://www.documentation.ird.fr/hor/fdi:010029858");
+R("bibliotheques", "archipel", "Wikisource : textes anciens", "Bibliothèque libre",
+  "Textes anciens transcrits et lisibles en ligne, dont l'Essai sur les Comores.",
+  "https://fr.wikisource.org/wiki/Essai_sur_les_Comores/2");

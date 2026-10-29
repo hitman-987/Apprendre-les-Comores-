@@ -15,6 +15,7 @@ const ASSISTANT_API = null;
 const state = { cat: "all", ile: "all", freeOnly: false, q: "" };
 const $ = (id) => document.getElementById(id);
 const onRender = []; // la carte et l'assistant s'abonnent au rendu
+let submittedQuery = ""; // dernière recherche validée (Entrée, bouton, suggestion)
 
 // Recherche insensible aux accents et à la casse.
 const normalize = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
@@ -146,6 +147,7 @@ function render() {
 function setSearch(q, { scroll = true } = {}) {
   $("q").value = q;
   state.q = q;
+  submittedQuery = q;
   state.cat = "all";
   render();
   if (scroll) $("explorer").scrollIntoView({ behavior: "smooth" });
