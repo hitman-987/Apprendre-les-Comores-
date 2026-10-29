@@ -14,14 +14,24 @@ Ouvrez `index.html` dans un navigateur. Aucune installation n'est nécessaire.
 |---|---|
 | `index.html` | La page |
 | `assets/style.css` | Le design |
-| `assets/app.js` | La recherche, les filtres, la carte et le formulaire |
+| `assets/app.js` | La recherche, les filtres et le formulaire |
+| `assets/assistant.js` | L'assistant : résumé, discussion, recherche web, agent IA |
+| `assets/map.js` | La carte interactive (Leaflet) |
 | `data/resources.js` | **Toutes les ressources** |
-| `data/fiches.js` | Les fiches de synthèse de l'assistant de résumé |
-| `outils/` | Création du Google Form, notes sur l'assistant |
+| `data/fiches.js` | Les fiches de synthèse de l'assistant |
+| `data/places.js` | Les lieux de la carte et leurs coordonnées |
+| `outils/` | Création du Google Form, agent IA (Cloudflare Worker) et guides |
 
-## L'assistant de résumé
+## La carte
 
-Chaque recherche, île ou rubrique affiche d'abord un résumé tiré de `data/fiches.js`, puis les ressources. Voir `outils/assistant-ia.md`.
+Carte Leaflet avec fonds libres : plan (CARTO / OpenStreetMap), satellite (Esri) et relief (OpenTopoMap).
+Les repères placent les ressources sur les lieux qu'elles citent ; les lieux se règlent dans `data/places.js`.
+
+## L'assistant
+
+Chaque recherche, île ou rubrique affiche d'abord un résumé (fiches de `data/fiches.js` et ressources du site),
+complété par Wikipédia quand le site n'a pas assez d'informations. Le bouton « Poser une question » ouvre une discussion.
+Un agent IA gratuit peut être branché : voir `outils/assistant-ia.md`.
 
 ## Ajouter une ressource
 

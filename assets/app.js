@@ -7,12 +7,14 @@ const REPO = "hitman-987/Apprendre-les-Comores-";
 //             entries: { title: "entry.1", url: "entry.2", cat: "entry.3", ile: "entry.4", desc: "entry.5", name: "entry.6" } }
 const GOOGLE_FORM = null;
 
-// Service d'IA facultatif (voir outils/assistant-ia.md). Laisser à null pour n'utiliser que les fiches.
+// Agent IA facultatif (voir outils/assistant-ia.md et outils/agent-ia-worker.js).
+// Exemple : "https://assistant-comores.<votre-compte>.workers.dev". Laisser à null pour l'assistant sans IA.
 const ASSISTANT_API = null;
 
 // ── Outils ───────────────────────────────────────────────
 const state = { cat: "all", ile: "all", freeOnly: false, q: "" };
 const $ = (id) => document.getElementById(id);
+const onRender = []; // la carte et l'assistant s'abonnent au rendu
 
 // Recherche insensible aux accents et à la casse.
 const normalize = (s) => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
@@ -53,31 +55,36 @@ function findFiche(q) {
   return best;
 }
 
-function baseFilter(r) {
-  if (state.cat !== "all" && r.cat !== state.cat) return false;
-  // Une ressource « archipel » concerne toutes les îles.
-  if (state.ile !== "all" && r.ile !== state.ile && r.ile !== "archipel") return false;
-  if (state.freeOnly && !r.free) return false;
-  return true;
+function filterBy(s) {
+  return (r) => {
+    if (s.cat !== "all" && r.cat !== s.cat) return false;
+    // Une ressource « archipel » concerne toutes les îles.
+    if (s.ile !== "all" && r.ile !== s.ile && r.ile !== "archipel") return false;
+    if (s.freeOnly && !r.free) return false;
+    return true;
+  };
 }
 
-// Toutes les ressources qui correspondent aux mots, puis, à défaut, celles qui en contiennent le plus.
+// Toutes les ressources qui contiennent tous les mots, puis, à défaut, celles qui en contiennent le plus.
 function textMatch(list, words, fiche) {
   if (!words.length) return fiche ? list.filter((r) => fiche.find.some((w) => r.hay.includes(w))) : list;
   const all = list.filter((r) => words.every((w) => r.hay.includes(w)));
   if (all.length) return all;
   const pool = fiche ? [...new Set([...words, ...fiche.find])] : words;
+  // Pour un nom complet (« Mohamed Taki Abdoulkarim »), un seul mot commun ne suffit pas.
+  const min = !fiche && words.length >= 3 ? 2 : 1;
   return list
     .map((r) => [r, pool.filter((w) => r.hay.includes(w)).length])
-    .filter(([, n]) => n > 0)
+    .filter(([, n]) => n >= min)
     .sort((a, b) => b[1] - a[1])
     .map(([r]) => r);
 }
 
-function search() {
-  const fiche = state.q ? findFiche(state.q) : null;
-  const words = terms(state.q);
-  const list = state.q ? textMatch(RESOURCES.filter(baseFilter), words, fiche) : RESOURCES.filter(baseFilter);
+// Recherche pour un état donné (celui de la page, ou celui d'une question de l'assistant).
+function searchFor(s) {
+  const fiche = s.q ? findFiche(s.q) : null;
+  const base = RESOURCES.filter(filterBy(s));
+  const list = s.q ? textMatch(base, terms(s.q), fiche) : base;
   return { fiche, list };
 }
 
@@ -106,98 +113,9 @@ function renderTabs(pool) {
     .join("");
 }
 
-// ── Assistant : résumé avant les ressources ──────────────
-function summaryFiche(fiche) {
-  if (fiche) return fiche;
-  if (state.q) return null;
-  if (state.cat !== "all" && FICHE_RUBRIQUE[state.cat]) return FICHE_BY_ID[FICHE_RUBRIQUE[state.cat]];
-  if (state.ile !== "all") return FICHE_BY_ID[FICHE_ILE[state.ile]];
-  return null;
-}
-
-function breakdown(list) {
-  const counts = {};
-  for (const r of list) counts[r.cat] = (counts[r.cat] || 0) + 1;
-  return Object.entries(counts)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 4)
-    .map(([k, n]) => `${n} en « ${CATEGORIES[k]} »`)
-    .join(", ");
-}
-
-function bestFirst(list) {
-  return [...list].sort((a, b) => (b.top - a.top) || (b.free - a.free)).slice(0, 3);
-}
-
-function renderAssistant(fiche, list) {
-  const box = $("assistant");
-  const f = summaryFiche(fiche);
-  if (!f && !state.q) { box.hidden = true; return; }
-  box.hidden = false;
-
-  let html;
-  if (f) {
-    html = `
-      <h3>${esc(f.title)}</h3>
-      ${f.text.map((p) => `<p>${esc(p)}</p>`).join("")}`;
-  } else if (list.length) {
-    html = `
-      <h3>« ${esc(state.q)} »</h3>
-      <p>Je n'ai pas encore de fiche de synthèse sur ce sujet. Voici ce que disent les ressources trouvées :</p>
-      <ul>${bestFirst(list).map((r) => `<li><strong>${esc(r.title)}</strong> : ${esc(r.desc)}</li>`).join("")}</ul>`;
-  } else {
-    html = `
-      <h3>« ${esc(state.q)} »</h3>
-      <p>Aucune ressource ne parle encore de ce sujet. Essayez un mot plus simple (un lieu, une personne, une période), ou <a href="#proposer">proposez une ressource</a>.</p>`;
-  }
-
-  if (list.length) {
-    const firsts = bestFirst(list);
-    html += `
-      <p class="assistant-count">${plural(list.length, "ressource trouvée", "ressources trouvées")} : ${esc(breakdown(list))}.</p>
-      ${f ? `<p class="assistant-sub">À consulter en premier</p>
-      <ul class="assistant-links">${firsts.map((r) => `<li><a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a> <span>${esc(host(r.url))}</span></li>`).join("")}</ul>` : ""}`;
-  }
-
-  const see = f ? f.see.map((id) => FICHE_BY_ID[id]).filter(Boolean) : [];
-  if (see.length) {
-    html += `<div class="assistant-next"><span>Pour aller plus loin</span>${see.map((s) => `<button type="button" class="chip" data-ask="${esc(s.title)}">${esc(s.title)}</button>`).join("")}</div>`;
-  }
-
-  $("assistantBody").innerHTML = html;
-  askAI(f, list);
-}
-
-// Si un service d'IA est réglé, il reformule le résumé à partir des ressources trouvées.
-let aiRequest = 0;
-async function askAI(fiche, list) {
-  if (!ASSISTANT_API || !state.q) return;
-  const id = ++aiRequest;
-  const note = $("assistantNote");
-  note.textContent = "Rédaction d'un résumé par l'IA…";
-  try {
-    const res = await fetch(ASSISTANT_API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        question: state.q,
-        fiche: fiche ? fiche.text.join("\n") : "",
-        ressources: list.slice(0, 12).map((r) => ({ titre: r.title, description: r.desc, lien: r.url })),
-      }),
-    });
-    const data = await res.json();
-    if (id !== aiRequest || !data.answer) return;
-    $("assistantBody").insertAdjacentHTML("afterbegin", `<div class="ai-answer">${data.answer.split(/\n+/).map((p) => `<p>${esc(p)}</p>`).join("")}</div>`);
-    note.textContent = "Résumé généré par une IA à partir des ressources du site. Vérifiez les détails dans les sources.";
-  } catch {
-    if (id === aiRequest) note.textContent = defaultNote;
-  }
-}
-const defaultNote = "Résumé rédigé à partir des ressources du site. Vérifiez les détails dans les sources.";
-
-// ── Rendu général ────────────────────────────────────────
 function render() {
-  const { fiche, list } = search();
+  const result = searchFor(state);
+  const { list } = result;
   const groups = Object.keys(CATEGORIES)
     .map((k) => [k, list.filter((r) => r.cat === k)])
     .filter(([, items]) => items.length);
@@ -212,31 +130,29 @@ function render() {
 
   $("empty").hidden = list.length > 0;
   $("count").textContent = plural(list.length, "ressource", "ressources");
-  $("picks").hidden = state.q !== "" || state.cat !== "all";
-  $("assistantNote").textContent = defaultNote;
-  renderAssistant(fiche, list);
+  const filtering = state.q !== "" || state.cat !== "all";
+  $("picks").hidden = filtering;
+  $("today").hidden = filtering;
+  $("activeIle").hidden = state.ile === "all";
+  if (state.ile !== "all") $("activeIle").textContent = `${ileLabel(state.ile)} ×`;
 
   // Les compteurs des onglets suivent la recherche et l'île, pas la rubrique.
-  const cat = state.cat;
-  state.cat = "all";
-  renderTabs(search().list);
-  state.cat = cat;
+  renderTabs(searchFor({ ...state, cat: "all" }).list);
+  document.querySelectorAll(".ichip").forEach((b) => b.setAttribute("aria-pressed", b.dataset.ile === state.ile));
 
-  document.querySelectorAll(".island").forEach((g) => g.classList.toggle("on", g.dataset.ile === state.ile));
-  $("mapStatus").textContent = state.ile === "all" ? "Toutes les îles" : ileLabel(state.ile);
-  $("mapReset").hidden = state.ile === "all";
+  for (const fn of onRender) fn(result);
 }
 
-function ask(q) {
+function setSearch(q, { scroll = true } = {}) {
   $("q").value = q;
   state.q = q;
   state.cat = "all";
   render();
-  $("explorer").scrollIntoView({ behavior: "smooth" });
+  if (scroll) $("explorer").scrollIntoView({ behavior: "smooth" });
 }
 
-function selectIsland(ile) {
-  state.ile = state.ile === ile ? "all" : ile;
+function setIsland(ile) {
+  state.ile = ile;
   render();
 }
 
@@ -341,8 +257,17 @@ function setupForm() {
 // ── Démarrage ────────────────────────────────────────────
 function init() {
   const free = RESOURCES.filter((r) => r.free).length;
-  $("lead").textContent = `${RESOURCES.length} ressources sur les quatre îles, dont ${free} gratuites : livres, vidéos, randonnées, plages, histoire, langue, cuisine et grandes figures de l'archipel.`;
-  $("topRail").innerHTML = RESOURCES.filter((r) => r.top).map(card).join("");
+  $("lead").textContent = `${RESOURCES.length} ressources sur les quatre îles, dont ${free} gratuites : livres, vidéos, randonnées, plages, histoire, langue, cuisine, grandes figures et avancées récentes.`;
+  $("topRail").innerHTML = RESOURCES.filter((r) => r.top && r.cat !== "innovations").map(card).join("");
+
+  const today = FICHE_BY_ID.innovations;
+  $("todayText").innerHTML = today.text.map((p) => `<p>${esc(p)}</p>`).join("");
+  $("todayRail").innerHTML = RESOURCES.filter((r) => r.cat === "innovations").slice(0, 8).map(card).join("");
+  $("todayAll").addEventListener("click", () => {
+    state.cat = "innovations";
+    render();
+    $("explorer").scrollIntoView({ behavior: "smooth" });
+  });
 
   $("tabs").addEventListener("click", (e) => {
     const b = e.target.closest(".tab");
@@ -351,35 +276,30 @@ function init() {
     render();
   });
   $("freeOnly").addEventListener("change", (e) => { state.freeOnly = e.target.checked; render(); });
+  $("activeIle").addEventListener("click", () => setIsland("all"));
 
   let timer;
   $("q").addEventListener("input", (e) => {
     clearTimeout(timer);
-    timer = setTimeout(() => { state.q = e.target.value.trim(); render(); }, 150);
+    timer = setTimeout(() => { state.q = e.target.value.trim(); render(); }, 200);
   });
   $("searchForm").addEventListener("submit", (e) => {
     e.preventDefault();
     clearTimeout(timer);
-    state.q = $("q").value.trim();
-    render();
-    $("explorer").scrollIntoView({ behavior: "smooth" });
+    setSearch($("q").value.trim());
   });
 
   document.addEventListener("click", (e) => {
     const b = e.target.closest("[data-ask]");
-    if (b) ask(b.dataset.ask);
+    if (b) setSearch(b.dataset.ask);
   });
-
-  document.querySelectorAll(".island").forEach((g) => {
-    g.addEventListener("click", () => selectIsland(g.dataset.ile));
-    g.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectIsland(g.dataset.ile); }
-    });
+  $("islandChips").addEventListener("click", (e) => {
+    const b = e.target.closest(".ichip");
+    if (b) setIsland(b.dataset.ile);
   });
-  $("mapReset").addEventListener("click", () => selectIsland(state.ile));
 
   setupForm();
   render();
 }
 
-init();
+window.addEventListener("DOMContentLoaded", init);

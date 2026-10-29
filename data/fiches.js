@@ -303,11 +303,21 @@ const FICHES = [
     ],
     find: ["restaurant", "hotel", "lodge", "gourmand"], see: ["cuisine", "plages"],
   },
+  {
+    id: "innovations", title: "Les Comores aujourd'hui : numérique et IA",
+    keys: ["intelligence artificielle", "ia", "numerique", "innovation", "startup", "5g", "internet", "technologie", "digital", "avancee", "aujourd'hui", "mobile money", "komor-ia"],
+    text: [
+      "Les Comores sont reliées à Internet par câble sous-marin depuis 2011 (EASSy), puis par d'autres câbles comme 2Africa. En 2025, Yas et Comores Telecom ont lancé la 5G, et un centre de données public a été inauguré pour les services de l'État.",
+      "Le paiement mobile s'est développé avec MVola, Holo et Huri Money. La stratégie « Comores Numérique 2028 » fixe le cap, et des incubateurs comme Innov'Lab accompagnent les jeunes entreprises à Moroni.",
+      "Côté intelligence artificielle, un premier forum de l'IA s'est tenu à Moroni en mars 2026. La startup Komor-IA et des chercheurs (projet Mwando) construisent les premiers corpus et outils en shikomori. Il n'existe pas encore de stratégie nationale sur l'IA.",
+    ],
+    find: ["numerique", "intelligence artificielle", "5g", "komor-ia", "mwando", "incubateur", "startup", "digital", "banque numerique"], see: ["shikomori", "archipel"],
+  },
 ];
 
 // Fiche à afficher quand on choisit une île sur la carte ou une rubrique.
 const FICHE_ILE = { ngazidja: "ngazidja", mwali: "mwali", ndzuwani: "ndzuwani", maore: "maore" };
 const FICHE_RUBRIQUE = {
   randonnees: "randonnees", plages: "plages", manger: "restaurants", histoire: "precolonial",
-  culture: "musique", langue: "shikomori", cuisine: "cuisine", nature: "nature", livres: "litterature", videos: "cinema",
+  culture: "musique", langue: "shikomori", cuisine: "cuisine", nature: "nature", livres: "litterature", videos: "cinema", innovations: "innovations",
 };

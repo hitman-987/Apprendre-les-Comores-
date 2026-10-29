@@ -25,6 +25,7 @@ const CATEGORIES = {
   cuisine: "Cuisine",
   nature: "Nature et faune",
   etudes: "Études et recherches",
+  innovations: "Avancées récentes",
   medias: "Presse et podcasts",
   bibliotheques: "Bibliothèques en ligne",
 };
@@ -677,3 +678,59 @@ R("bibliotheques", "archipel", "Internet Archive : Comores", "Bibliothèque num�
 R("bibliotheques", "archipel", "Catalogue de la BnF", "Bibliothèque nationale de France",
   "Tous les livres publiés en France sur les Comores, pour les emprunter en bibliothèque.",
   bnf("Comores"));
+
+/* ───────────── Avancées récentes ───────────── */
+R("innovations", "ngazidja", "Forum de l'intelligence artificielle aux Comores", "Data Consulting KM, Moroni",
+  "Première édition le 31 mars 2026 à Moroni, puis « AI Forward Comores » ; formations à l'IA et à la donnée.",
+  "https://www.dataconsultingkm.com/", { top: true });
+R("innovations", "archipel", "Komor-IA", "Startup comorienne d'intelligence artificielle, fondée en 2025",
+  "Des modèles d'IA adaptés au contexte africain et un premier jeu de données français-shingazidja, écrit et oral.",
+  "https://www.komor-ia.com/");
+R("innovations", "archipel", "Mwando : l'IA pour préserver et enseigner le shikomori", "Article de recherche, arXiv",
+  "Un assistant virtuel pour apprendre les quatre variantes du shikomori, à partir de proverbes, dictionnaires et leçons.",
+  "https://arxiv.org/abs/2607.23481", { lang: "en" });
+R("innovations", "archipel", "« L'IA est une véritable révolution technologique »", "Masiwa, entretien avec Dr Soilih Zilé",
+  "Le projet de rendre le shikomori utilisable par les outils d'IA en constituant des corpus de textes.",
+  "https://masiwa-comores.com/dr-soilih-zile-ingenieur-lia-est-une-veritable-revolution-technologique/");
+R("innovations", "archipel", "L'IA, ton premier associé", "Naoufad Saandi, livre",
+  "Un guide pour les entrepreneurs qui veulent utiliser l'intelligence artificielle.",
+  "https://www.dataconsultingkm.com/ia-ton-premier-associe", { free: false });
+R("innovations", "archipel", "Un tournant pour la citoyenneté numérique", "Chagra Media",
+  "Les engagements pris à Moroni pour un usage responsable du numérique.",
+  "https://chagramedia.com/comores-un-tournant-strategique-pour-la-citoyennete-numerique-acte-a-moroni/");
+R("innovations", "archipel", "Stratégie Comores Numérique 2028", "ANADEN, PDF",
+  "Le plan national pour le numérique, adopté en 2018 : six axes et l'objectif de porter le numérique à 5 % du PIB.",
+  "https://anaden.org/uploads/media/5e3969272d9f8/strat-comores-numerique-v2-3-compresse.pdf");
+R("innovations", "archipel", "ANADEN", "Agence nationale de développement du numérique",
+  "L'agence qui pilote la numérisation des services publics et le centre de données de l'État.",
+  "https://www.anaden.org/");
+R("innovations", "ngazidja", "Technopole numérique des Comores", "Site du projet",
+  "Un pôle dédié à la formation des jeunes, aux startups et à l'économie numérique.",
+  "https://www.technopole.km/projet_technopole");
+R("innovations", "ngazidja", "Innov'Lab, premier incubateur du pays", "We are Tech",
+  "Lancé en 2017 à Moroni, il a accompagné plus de 60 entreprises.",
+  "https://www.wearetech.africa/fr/fils/tech-stars/comores-innovlab-accompagne-les-entrepreneurs-de-lidee-a-la-realisation-de-leur-projet");
+R("innovations", "archipel", "La BAD finance la digitalisation de l'économie", "Agence Ecofin",
+  "Plus de 9 millions d'euros pour les services publics en ligne, un centre de données et un incubateur universitaire.",
+  "https://www.agenceecofin.com/investissement/0210-122087-comores-la-bad-octroie-plus-de-9-millions-d-euros-pour-soutenir-la-digitalisation-de-l-economie");
+R("innovations", "archipel", "Attribution des fréquences 5G", "Mayotte Hebdo",
+  "En 2025, Yas et Comores Telecom obtiennent les fréquences pour lancer la 5G.",
+  "https://www.mayottehebdo.com/actualite/economie/comores-attribution-des-frequences-de-la-5g/");
+R("innovations", "archipel", "5G et fibre : 28,8 millions de dollars d'investissement", "Osiris",
+  "Le plan de Yas Comores pour la 5G et la fibre optique.",
+  "https://osiris.sn/5g-et-fibre-optique-yas-comores-annonce-un-investissement-de-28-8-millions-usd.html");
+R("innovations", "archipel", "Banque numérique et paiement mobile", "Osiris, 2026",
+  "MVola, Holo, Huri Money et la nouvelle licence de banque numérique : où en est l'inclusion financière.",
+  "https://osiris.sn/comores-axian-decroche-une-licence-de-banque-numerique-et-muscle-son-offre.html");
+R("innovations", "archipel", "Les Comores et le numérique", "Digital Watch, fiche pays",
+  "Câbles sous-marins, 5G, centre de données public et cadre juridique du numérique.",
+  "https://dig.watch/countries/comoros", { lang: "en" });
+R("innovations", "archipel", "L'intelligence artificielle en Afrique de l'Est et océan Indien", "DG Trésor, lettre économique, 2025",
+  "Où en sont les pays de la région, dont les Comores, face à l'IA.",
+  "https://www.tresor.economie.gouv.fr/Articles/2025/01/30/lettre-economique-d-aeoi-l-intelligence-artificielle-en-aeoi");
+R("innovations", "archipel", "Un an après l'entrée des Comores à l'OMC", "Forum économique mondial, 2025",
+  "Ce que l'adhésion à l'Organisation mondiale du commerce change pour l'économie.",
+  "https://www.weforum.org/stories/2025/02/world-trade-organization-membership-comoros-economic-goals/", { lang: "en" });
+R("innovations", "ngazidja", "Salon des entreprises BIK 2025", "AllAfrica",
+  "« Investir aujourd'hui, transformer demain » : le salon des entreprises de Moroni.",
+  "https://fr.allafrica.com/stories/202508270155.html");
