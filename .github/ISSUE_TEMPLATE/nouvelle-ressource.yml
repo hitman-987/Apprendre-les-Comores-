@@ -1,0 +1,30 @@
+name: Proposer une ressource
+description: Suggérer un livre, une vidéo, un lieu, une randonnée, une étude… sur les Comores.
+title: "[Ressource] "
+labels: ["nouvelle ressource"]
+body:
+  - type: input
+    id: lien
+    attributes:
+      label: Lien
+      placeholder: https://…
+    validations:
+      required: true
+  - type: input
+    id: rubrique
+    attributes:
+      label: Rubrique
+      placeholder: Livres, Vidéos et films, Randonnées…
+  - type: input
+    id: ile
+    attributes:
+      label: Île
+      placeholder: Ngazidja, Mwali, Ndzuwani, Maore ou tout l'archipel
+  - type: textarea
+    id: description
+    attributes:
+      label: Pourquoi la recommandez-vous ?
+  - type: input
+    id: auteur
+    attributes:
+      label: Votre nom ou pseudo (facultatif)
