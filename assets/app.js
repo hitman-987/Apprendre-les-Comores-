@@ -150,7 +150,7 @@ function setSearch(q, { scroll = true } = {}) {
   submittedQuery = q;
   state.cat = "all";
   render();
-  if (scroll) $("explorer").scrollIntoView({ behavior: "smooth" });
+  if (scroll) $("explorer").scrollIntoView({ behavior: document.documentElement.classList.contains("calm") ? "auto" : "smooth" });
 }
 
 function setIsland(ile) {
@@ -259,7 +259,7 @@ function setupForm() {
 // ── Démarrage ────────────────────────────────────────────
 function init() {
   const free = RESOURCES.filter((r) => r.free).length;
-  $("lead").textContent = `${RESOURCES.length} ressources sur les quatre îles, dont ${free} gratuites : livres, vidéos, randonnées, plages, histoire, langue, cuisine, grandes figures et avancées récentes.`;
+  $("lead").textContent = "Livres, vidéos, randonnées, plages, histoire, langue, cuisine, grandes figures et avancées récentes : tout ce qu'il faut pour découvrir l'archipel, sur une carte et avec un assistant.";
   $("topRail").innerHTML = RESOURCES.filter((r) => r.top && r.cat !== "innovations").map(card).join("");
 
   const today = FICHE_BY_ID.innovations;

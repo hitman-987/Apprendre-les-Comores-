@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" class="no-js">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -12,15 +12,77 @@
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
   <link rel="stylesheet" href="assets/style.css">
+  <script>
+    // Appliquer les préférences d'affichage avant l'affichage de la page (pas de flash).
+    (function () {
+      var d = document.documentElement; d.classList.remove("no-js"); d.classList.add("js");
+      try {
+        var p = JSON.parse(localStorage.getItem("affichage") || "{}");
+        if (p.theme === "light" || p.theme === "dark") d.dataset.theme = p.theme;
+        if (p.text) d.dataset.text = p.text;
+        ["dys", "spacing", "contrast", "calm"].forEach(function (k) { if (p[k]) d.classList.add(k); });
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
   <a class="skip" href="#explorer">Aller aux ressources</a>
 
-  <header class="hero">
+  <nav class="topbar" aria-label="Navigation principale">
+    <div class="wrap topbar-inner">
+      <a class="brand" href="#" data-goto="top">Apprendre les Comores</a>
+      <ul class="nav-links">
+        <li><a href="#carte" data-goto="carte">Carte</a></li>
+        <li><a href="#today" data-goto="today">Aujourd'hui</a></li>
+        <li><a href="#explorer" data-goto="explorer">Ressources</a></li>
+        <li><a href="#proposer" data-goto="proposer">Proposer</a></li>
+      </ul>
+      <div class="nav-tools">
+        <button type="button" class="tool-btn" id="themeToggle" aria-label="Passer en mode sombre">
+          <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></svg>
+          <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+        <button type="button" class="tool-btn tool-text" id="a11yOpen" aria-haspopup="dialog" aria-controls="a11yPanel">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="4.5" r="2"/><path d="M4 8.5l8 1.5 8-1.5M12 10v5m0 0-3 6m3-6 3 6"/></svg>
+          <span>Accessibilité</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="a11y-panel" id="a11yPanel" role="dialog" aria-labelledby="a11yTitle" hidden>
+    <div class="a11y-head">
+      <h2 id="a11yTitle">Affichage et accessibilité</h2>
+      <button type="button" class="chat-close" id="a11yClose" aria-label="Fermer">×</button>
+    </div>
+    <fieldset>
+      <legend>Thème</legend>
+      <div class="seg">
+        <label><input type="radio" name="theme" value="auto"> Automatique</label>
+        <label><input type="radio" name="theme" value="light"> Clair</label>
+        <label><input type="radio" name="theme" value="dark"> Sombre</label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Taille du texte</legend>
+      <div class="seg">
+        <label><input type="radio" name="text" value=""> Normale</label>
+        <label><input type="radio" name="text" value="lg"> Grande</label>
+        <label><input type="radio" name="text" value="xl"> Très grande</label>
+      </div>
+    </fieldset>
+    <label class="switch"><input type="checkbox" name="dys"> <span><strong>Police adaptée à la dyslexie</strong> (OpenDyslexic)</span></label>
+    <label class="switch"><input type="checkbox" name="spacing"> <span><strong>Espacement renforcé</strong> entre lettres, mots et lignes</span></label>
+    <label class="switch"><input type="checkbox" name="contrast"> <span><strong>Contraste renforcé</strong> et liens soulignés</span></label>
+    <label class="switch"><input type="checkbox" name="calm"> <span><strong>Réduire les animations</strong></span></label>
+    <button type="button" class="link" id="a11yReset">Revenir aux réglages par défaut</button>
+  </div>
+
+  <header class="hero" id="top">
     <div class="wrap">
-      <p class="brand">Apprendre les Comores</p>
       <h1>Tout pour découvrir les quatre îles, au même endroit.</h1>
       <p class="lead" id="lead">Livres, vidéos, randonnées, plages, histoire, langue et grandes figures de l'archipel.</p>
+      <ul class="stats" id="stats" aria-label="Le site en chiffres"></ul>
       <form class="search" role="search" id="searchForm">
         <label class="sr-only" for="q">Rechercher une ressource ou poser une question</label>
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
@@ -82,7 +144,7 @@
             <label class="check"><input type="checkbox" id="freeOnly"> Gratuit uniquement</label>
             <span class="count" id="count" aria-live="polite"></span>
             <button type="button" class="active-ile" id="activeIle" hidden></button>
-            <a class="button ghost" href="#proposer">Proposer une ressource</a>
+            <a class="button ghost" href="#proposer" data-goto="proposer">Proposer une ressource</a>
           </div>
         </div>
       </div>
@@ -99,7 +161,7 @@
         <div id="results"></div>
         <div class="empty" id="empty" hidden>
           <p><strong>Aucune ressource ne correspond à cette recherche.</strong></p>
-          <p>Essayez un autre mot, une autre île, ou <a href="#proposer">proposez la ressource qui manque</a>.</p>
+          <p>Essayez un autre mot, une autre île, ou <a href="#proposer" data-goto="proposer">proposez la ressource qui manque</a>.</p>
         </div>
       </div>
     </section>
@@ -157,10 +219,14 @@
 
   <footer class="wrap">
     <p>Ce site rassemble des liens vers des ressources publiques. Les contenus appartiennent à leurs auteurs.</p>
-    <p>Un lien cassé ? <a href="#proposer">Signalez-le avec le formulaire</a>.</p>
+    <p>Un lien cassé ? <a href="#proposer" data-goto="proposer">Signalez-le avec le formulaire</a>.</p>
   </footer>
 
-  <button type="button" class="ask-fab" id="askOpen" aria-haspopup="dialog" aria-controls="chat">
+  <button type="button" class="to-top" id="toTop" aria-label="Revenir en haut de la page" hidden>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  </button>
+
+  <button type="button" class="ask-fab" id="askOpen" aria-label="Poser une question à l'assistant" aria-haspopup="dialog" aria-controls="chat">
     <span class="assistant-mark" aria-hidden="true"></span> Poser une question
   </button>
 
@@ -196,5 +262,6 @@
   <script src="assets/app.js"></script>
   <script src="assets/assistant.js"></script>
   <script src="assets/map.js"></script>
+  <script src="assets/ui.js"></script>
 </body>
 </html>

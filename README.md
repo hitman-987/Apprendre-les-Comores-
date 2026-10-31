@@ -17,10 +17,17 @@ Ouvrez `index.html` dans un navigateur. Aucune installation n'est nécessaire.
 | `assets/app.js` | La recherche, les filtres et le formulaire |
 | `assets/assistant.js` | L'assistant : résumé, discussion, recherche web, agent IA |
 | `assets/map.js` | La carte interactive (Leaflet) |
+| `assets/ui.js` | Thème clair/sombre, accessibilité, navigation, retour en haut, animations |
 | `data/resources.js` | **Toutes les ressources** |
 | `data/fiches.js` | Les fiches de synthèse de l'assistant |
 | `data/places.js` | Les lieux de la carte et leurs coordonnées |
 | `outils/` | Création du Google Form, agent IA (Cloudflare Worker) et guides |
+
+## Accessibilité
+
+Le bouton « Accessibilité » en haut de page règle : thème (automatique, clair, sombre), taille du texte,
+police adaptée à la dyslexie (OpenDyslexic), espacement renforcé, contraste renforcé et réduction des animations.
+Les choix sont gardés dans le navigateur du visiteur. Le site s'ouvre toujours en haut de page.
 
 ## La carte
 
