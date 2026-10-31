@@ -302,6 +302,10 @@ function init() {
 
   setupForm();
   render();
+
+  // Lien direct vers une recherche : ?q=Karthala
+  const q = new URLSearchParams(location.search).get("q");
+  if (q) setSearch(q);
 }
 
 window.addEventListener("DOMContentLoaded", init);

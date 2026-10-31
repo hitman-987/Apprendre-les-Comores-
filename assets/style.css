@@ -463,3 +463,10 @@ html.calm.js .reveal:not(.in) { transform: none; opacity: 1; }
 @media (prefers-reduced-motion: reduce) {
   .js .reveal:not(.in) { transform: none; opacity: 1; }
 }
+
+/* Nom du site dans le titre principal (référencement) */
+.h1-name { display: block; font-size: clamp(1rem, 1.6vw, 1.2rem); font-weight: 700; letter-spacing: 0; color: var(--lagoon); margin-bottom: 14px; }
+.h1-tag { display: block; }
+.about { padding-block: 48px 8px; max-width: 900px; }
+.about h2 { margin-bottom: 12px; }
+.about p { color: var(--muted); max-width: 75ch; }

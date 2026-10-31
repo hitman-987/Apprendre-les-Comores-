@@ -186,7 +186,8 @@ function setupReveal() {
 window.addEventListener("DOMContentLoaded", () => {
   // Une ancre laissée dans l'adresse (#proposer…) ne doit pas ouvrir la page en bas.
   if (location.hash) history.replaceState(null, "", location.pathname + location.search);
-  window.scrollTo(0, 0);
+  // Sauf pour un lien de recherche (?q=…), qui descend vers les résultats.
+  if (!new URLSearchParams(location.search).has("q")) window.scrollTo(0, 0);
   setupPrefs();
   setupNav();
   setupStats();

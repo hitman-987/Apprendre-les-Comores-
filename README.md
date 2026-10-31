@@ -21,7 +21,15 @@ Ouvrez `index.html` dans un navigateur. Aucune installation n'est nécessaire.
 | `data/resources.js` | **Toutes les ressources** |
 | `data/fiches.js` | Les fiches de synthèse de l'assistant |
 | `data/places.js` | Les lieux de la carte et leurs coordonnées |
+| `ressources.html`, `sitemap.xml` | Pages pour les moteurs de recherche (générées) |
 | `outils/` | Création du Google Form, agent IA (Cloudflare Worker) et guides |
+
+## Référencement (Google, Bing…)
+
+- Titre, description, balises de partage (Open Graph), données structurées (schema.org) et image d'aperçu dans `index.html`.
+- `ressources.html` (toutes les ressources en HTML simple) et `sitemap.xml` sont générés par `node outils/generer-pages.js` :
+  **relancez cette commande après chaque ajout de ressources**.
+- Déclarez le site et `sitemap.xml` dans Google Search Console et Bing Webmaster Tools.
 
 ## Accessibilité
 
